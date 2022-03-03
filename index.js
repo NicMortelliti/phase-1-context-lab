@@ -1,4 +1,85 @@
-/* Your Code Here */
+function createEmployeeRecord(employeeArray) {
+  return {
+    firstName: employeeArray[0],
+    familyName: employeeArray[1],
+    title: employeeArray[2],
+    payPerHour: employeeArray[3],
+    timeInEvents: [],
+    timeOutEvents: [],
+  };
+}
+
+function createEmployeeRecords(employeesArray) {
+  const recordArray = [];
+
+  employeesArray.forEach(array => {
+    const recordObject = createEmployeeRecord(array);
+    recordArray.push(recordObject);
+  });
+
+  return recordArray;
+}
+
+function createTimeInEvent(timeString) {
+  // Pull the hour and date from timeString
+  const hour = parseInt(timeString.slice(-4));
+  const date = timeString.slice(0, 10);
+
+  this.timeInEvents.push({
+    type: "TimeIn",
+    hour: hour,
+    date,
+  });
+
+  return this;
+}
+
+function createTimeOutEvent(timeString) {
+  // Pull the hour and date from timeString
+  const hour = parseInt(timeString.slice(-4));
+  const date = timeString.slice(0, 10);
+
+  this.timeOutEvents.push({
+    type: "TimeOut",
+    hour: hour,
+    date,
+  });
+
+  return this;
+}
+
+function hoursWorkedOnDate(dateString) {
+  let hourIn = this.timeInEvents.find(function (e) {
+    return e.date === dateString;
+  });
+
+  let hourOut = this.timeOutEvents.find(function (e) {
+    return e.date === dateString;
+  });
+
+  return (hourOut.hour - hourIn.hour) / 100;
+}
+
+function wagesEarnedOnDate(dateString) {
+  // Retrieve # of hours from hoursWorkedOnDate.
+  const hours = hoursWorkedOnDate.call(this, dateString);
+
+  // Multiply this number by the records payPerHour
+  // and return result.
+  return hours * this.payPerHour;
+}
+
+let findEmployeeByFirstName = function (srcArray, firstName) {
+  return srcArray.find(function (rec) {
+    return rec.firstName === firstName;
+  });
+};
+
+function calculatePayroll(allEmployeesArray) {
+  return allEmployeesArray.reduce(function (memo, rec) {
+    return memo + allWagesFor.call(rec);
+  }, 0);
+}
 
 /*
  We're giving you this function. Take a look at it, you might see some usage
@@ -22,22 +103,4 @@ const allWagesFor = function () {
   ); // <== Hm, why did we need to add bind() there? We'll discuss soon!
 
   return payable;
-};
-
-const createEmployeeRecord = function (array) {
-  // Load array elements into corresponding Object properties.
-  return {
-    firstName: array[0],
-    familyName: array[1],
-    title: array[2],
-    payPerHour: array[3],
-    timeInEvents: [],
-    timeOutEvents: [],
-  };
-};
-
-const createEmployeeRecords = function (arrayOfArrays) {
-  return arrayOfArrays.forEach(employee => {
-    createEmployeeRecord(employee);
-  });
 };
